@@ -31,3 +31,4 @@ build.properties
 # Script Related Files
 *.pyc
 configuration.py
+scripts/long-description/services.json
