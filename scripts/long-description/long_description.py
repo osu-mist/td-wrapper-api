@@ -1,4 +1,4 @@
-import json, requests, time
+import json, requests, time, sys
 from configuration import *
 
 def get_access_token():
@@ -7,6 +7,7 @@ def get_access_token():
     request = requests.post(url, json=post_data)
     if request.status_code is not 200:
         print("Error: Unable to get access token.")
+        print(request.text)
         sys.exit(1)
     
     return request.text
@@ -38,13 +39,16 @@ def get_services_with_long_descriptions(access_token):
            print("Error: " + single_service_url) 
        
        # TD's API allows 60 requests per minute, so we should delay the execution of this loop
-       single_service_elapsed_seconds = single_service.elapsed.total_seconds()
-       if single_service_elapsed_seconds < 1:
-           delay_seconds = 1 - single_service_elapsed_seconds
-           print("Delay seconds: " + str(delay_seconds))
-           time.sleep(delay_seconds)
+       delay(single_service.elapsed.total_seconds())
 
     return all_services_with_long_descriptions, error
+
+# Delays the script if the API response took a given amount of time
+def delay(api_request_elapsed_seconds):
+    if api_request_elapsed_seconds < 1:
+       delay_seconds = 1 - api_request_elapsed_seconds
+       print("Delay seconds: " + str(delay_seconds))
+       time.sleep(delay_seconds)
 
 if __name__ == '__main__':
    access_token = get_access_token()
