@@ -1,6 +1,8 @@
 import json, requests, time, sys
+from bs4 import BeautifulSoup
 from configuration import *
 
+# Get an access token for authenticating API requests
 def get_access_token():
     post_data = {'username': td_api_user, 'password': td_api_pass}
     url = td_api_url + "/auth"
@@ -12,11 +14,33 @@ def get_access_token():
     
     return request.text
 
+# Find span html tags and create a dict of their id and value
+def get_parsed_html(raw_html):
+    parsed_html = BeautifulSoup(raw_html, "html.parser")
+    span_dict = {}
+    spans = parsed_html.find_all('span')
+
+    for span in spans:
+        span_id = span.get('id')
+        if span_id:
+            span_contents = span.contents
+            span_full_string = ""
+
+            # need a better way to get the literal contents of tag. span.text strips out html tags 
+            for content in span_contents:
+                span_full_string += str(content)
+
+            span_dict[span_id] = span_full_string
+
+    return span_dict
+
+# Get long description from individual service API and add it to object with all services
+# The API to get all services doesn't include each service's long description
 def get_services_with_long_descriptions(access_token):
     service_url = td_api_url + "/services"
     long_description_field = 'LongDescription'
     error = False
-    
+
     auth_header = {'Authorization': "Bearer " + access_token}
     all_services = requests.get(service_url, headers=auth_header)
     all_services_with_long_descriptions = []
@@ -31,9 +55,11 @@ def get_services_with_long_descriptions(access_token):
        
        if single_service.status_code is 200:
            single_service_json = single_service.json()
-           service[long_description_field] = single_service_json[long_description_field]
+           long_description = single_service_json[long_description_field]
+           service[long_description_field] = long_description
+           service['SpanTagsParsedFromLongDescription'] = get_parsed_html(long_description)
            all_services_with_long_descriptions.append(service)
-           print("Added long description")
+           print("Added long description and parsed HTML object")
        else:
            error = True
            print("Error: " + single_service_url) 
