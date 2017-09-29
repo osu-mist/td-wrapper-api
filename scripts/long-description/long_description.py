@@ -43,7 +43,7 @@ def get_services_with_long_descriptions(access_token):
 
     auth_header = {'Authorization': "Bearer " + access_token}
     all_services = requests.get(service_url, headers=auth_header)
-    all_services_with_long_descriptions = []
+    all_services_with_long_descriptions = {}
 
     for service in all_services.json():
        service_id = str(service['ID'])
@@ -58,7 +58,7 @@ def get_services_with_long_descriptions(access_token):
            long_description = single_service_json[long_description_field]
            service[long_description_field] = long_description
            service['SpanTagsParsedFromLongDescription'] = get_parsed_html(long_description)
-           all_services_with_long_descriptions.append(service)
+           all_services_with_long_descriptions[service_id] = service
            print("Added long description and parsed HTML object")
        else:
            error = True
