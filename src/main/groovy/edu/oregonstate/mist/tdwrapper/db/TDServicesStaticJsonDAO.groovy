@@ -6,14 +6,13 @@ import groovy.json.JsonSlurper
 class TDServicesStaticJsonDAO {
 
     private File servicesFile
-    private JsonSlurper jsonSlurper = new JsonSlurper()
 
     TDServicesStaticJsonDAO(String sourceJsonFile) {
         servicesFile = new File(sourceJsonFile)
     }
 
     public List<ResourceObject> getTDServices() {
-        def servicesRaw = jsonSlurper.parseText(servicesFile.getText())
+        def servicesRaw = getJsonRaw()
 
         List<ResourceObject> services = []
 
@@ -24,11 +23,26 @@ class TDServicesStaticJsonDAO {
         services
     }
 
+    public ResourceObject getTDServiceByID(String id) {
+        def servicesRaw = getJsonRaw()
+
+        if (!servicesRaw[id]) {
+            return null
+        }
+
+        getResourceObject(servicesRaw[id])
+    }
+
     private ResourceObject getResourceObject(def serviceRaw) {
         new ResourceObject(
                 id: serviceRaw['ID'],
                 type: "service",
                 attributes: serviceRaw
         )
+    }
+
+    private def getJsonRaw() {
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        jsonSlurper.parseText(servicesFile.getText())
     }
 }

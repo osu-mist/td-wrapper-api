@@ -2,6 +2,7 @@ package edu.oregonstate.mist.tdwrapper.resources
 
 import com.codahale.metrics.annotation.Timed
 import edu.oregonstate.mist.api.Resource
+import edu.oregonstate.mist.api.jsonapi.ResourceObject
 import edu.oregonstate.mist.api.jsonapi.ResultObject
 import edu.oregonstate.mist.tdwrapper.db.TDServicesStaticJsonDAO
 import groovy.transform.TypeChecked
@@ -9,6 +10,7 @@ import groovy.transform.TypeChecked
 import javax.annotation.security.PermitAll
 import javax.ws.rs.GET
 import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -29,10 +31,25 @@ class TDResource extends Resource {
     @Timed
     @Path("services")
     Response getServices() {
-        ResultObject resultObject = new ResultObject(
-                data: tdServicesDAO.getTDServices()
-        )
-
+        ResultObject resultObject = getResultObject(tdServicesDAO.getTDServices())
         ok(resultObject).build()
+    }
+
+    @GET
+    @Timed
+    @Path("services/{id: [0-9a-zA-Z-]+}")
+    Response getServiceByID(@PathParam("id") String id) {
+        ResourceObject service = tdServicesDAO.getTDServiceByID(id)
+
+        if (!service) {
+            return notFound().build()
+        }
+
+        ResultObject resultObject = getResultObject(service)
+        ok(resultObject).build()
+    }
+
+    private ResultObject getResultObject(def data) {
+        new ResultObject(data: data)
     }
 }
