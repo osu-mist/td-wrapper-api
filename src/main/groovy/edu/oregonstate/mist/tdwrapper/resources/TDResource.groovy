@@ -27,6 +27,10 @@ class TDResource extends Resource {
         this.tdServicesDAO = tdServicesDAO
     }
 
+    /**
+     * Get all services
+     * @return
+     */
     @GET
     @Timed
     @Path("services")
@@ -35,6 +39,11 @@ class TDResource extends Resource {
         ok(resultObject).build()
     }
 
+    /**
+     * Get a service by ID
+     * @param id
+     * @return
+     */
     @GET
     @Timed
     @Path("services/{id: [0-9a-zA-Z-]+}")

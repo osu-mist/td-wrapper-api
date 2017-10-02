@@ -11,6 +11,10 @@ class TDServicesStaticJsonDAO {
         servicesFile = new File(sourceJsonFile)
     }
 
+    /**
+     * Get all services
+     * @return
+     */
     public List<ResourceObject> getTDServices() {
         def servicesRaw = getJsonRaw()
 
@@ -23,6 +27,11 @@ class TDServicesStaticJsonDAO {
         services
     }
 
+    /**
+     * Get service by ID
+     * @param id
+     * @return
+     */
     public ResourceObject getTDServiceByID(String id) {
         def servicesRaw = getJsonRaw()
 
@@ -33,6 +42,11 @@ class TDServicesStaticJsonDAO {
         getResourceObject(servicesRaw[id])
     }
 
+    /**
+     * Helper method to create resource object
+     * @param serviceRaw
+     * @return
+     */
     private ResourceObject getResourceObject(def serviceRaw) {
         new ResourceObject(
                 id: serviceRaw['ID'],
@@ -41,6 +55,10 @@ class TDServicesStaticJsonDAO {
         )
     }
 
+    /**
+     * Helper method to slurp json file into a def
+     * @return
+     */
     private def getJsonRaw() {
         JsonSlurper jsonSlurper = new JsonSlurper()
         jsonSlurper.parseText(servicesFile.getText())
