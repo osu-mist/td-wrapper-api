@@ -1,6 +1,21 @@
-# Web API Skeleton
+# TeamDynamix Wrapper API
 
-Skeleton for Dropwizard Web APIs.
+Wrapper API for TeamDynamix to perform some data manipulation.
+
+## Endpoints
+
+### Services
+
+Get services in TeamDynamix with their long description. Any span HTML tags in the long description
+are put in their own JSON object called `SpanTagsParsedFromLongDescription`.
+
+#### GET /teamdynamix/services
+Get all services with their long descriptions.
+
+#### GET /teamdynamix/services/{id}
+Get a single service by its ID.
+
+## Setup
 
 ### Generate Keys
 
