@@ -18,13 +18,7 @@ class TDServicesStaticJsonDAO {
     public List<ResourceObject> getTDServices() {
         def servicesRaw = getJsonRaw()
 
-        List<ResourceObject> services = []
-
-        servicesRaw.each { id, service ->
-            services.add(getResourceObject(service))
-        }
-
-        services
+        servicesRaw.collect { id, service -> getResourceObject(service) }
     }
 
     /**

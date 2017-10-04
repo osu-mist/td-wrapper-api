@@ -1,13 +1,13 @@
 import json, requests, time, sys
 from bs4 import BeautifulSoup
-from configuration import *
+from configuration import td_api_url, td_api_user, td_api_pass
 
 # Get an access token for authenticating API requests
 def get_access_token():
     post_data = {'username': td_api_user, 'password': td_api_pass}
     url = td_api_url + "/auth"
     request = requests.post(url, json=post_data)
-    if request.status_code is not 200:
+    if request.status_code != 200:
         print("Error: Unable to get access token.")
         print(request.text)
         sys.exit(1)
@@ -53,7 +53,7 @@ def get_services_with_long_descriptions(access_token):
        single_service_url = service_url + "/" + service_id
        single_service = requests.get(single_service_url, headers=auth_header)
        
-       if single_service.status_code is 200:
+       if single_service.status_code == 200:
            single_service_json = single_service.json()
            long_description = single_service_json[long_description_field]
            service[long_description_field] = long_description
