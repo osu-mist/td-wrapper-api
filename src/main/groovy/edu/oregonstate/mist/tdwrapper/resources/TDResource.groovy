@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.UriBuilder
 
 @Path("teamdynamix")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,8 +24,12 @@ class TDResource extends Resource {
 
     private TDServicesStaticJsonDAO tdServicesDAO
 
-    TDResource(TDServicesStaticJsonDAO tdServicesDAO) {
+    private String baseUri
+
+    TDResource(TDServicesStaticJsonDAO tdServicesDAO,
+               URI endpointUri) {
         this.tdServicesDAO = tdServicesDAO
+        this.baseUri = UriBuilder.fromUri(endpointUri).path(this.class).toString()
     }
 
     /**
@@ -35,7 +40,8 @@ class TDResource extends Resource {
     @Timed
     @Path("services")
     Response getServices() {
-        ResultObject resultObject = getResultObject(tdServicesDAO.getTDServices())
+        ResultObject resultObject = getResultObject(
+                tdServicesDAO.getTDServices("${baseUri}/services/"))
         ok(resultObject).build()
     }
 
@@ -48,7 +54,7 @@ class TDResource extends Resource {
     @Timed
     @Path("services/{id: [0-9a-zA-Z-]+}")
     Response getServiceByID(@PathParam("id") String id) {
-        ResourceObject service = tdServicesDAO.getTDServiceByID(id)
+        ResourceObject service = tdServicesDAO.getTDServiceByID(id, "${baseUri}/services/")
 
         if (!service) {
             return notFound().build()
@@ -61,4 +67,5 @@ class TDResource extends Resource {
     private ResultObject getResultObject(def data) {
         new ResultObject(data: data)
     }
+
 }

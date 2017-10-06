@@ -22,7 +22,7 @@ class TDWrapperApplication extends Application<TDWrapperConfiguration> {
 
         final TDServicesStaticJsonDAO TDSERVICESDAO = new TDServicesStaticJsonDAO(
                 configuration.tdServicesJson)
-        environment.jersey().register(new TDResource(TDSERVICESDAO))
+        environment.jersey().register(new TDResource(TDSERVICESDAO, configuration.api.endpointUri))
     }
 
     /**
