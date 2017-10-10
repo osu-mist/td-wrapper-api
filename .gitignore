@@ -27,3 +27,8 @@ build.properties
 *.cer
 *.keystore
 *.truststore
+
+# Script Related Files
+*.pyc
+configuration.py
+scripts/long-description/services.json
