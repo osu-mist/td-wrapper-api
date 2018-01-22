@@ -34,11 +34,19 @@ def get_parsed_html(raw_html):
 
     return span_dict
 
+# Split category text into list
+def get_parsed_categories(raw_categories):
+    categories = raw_categories.split(" / ")
+
+    return categories
+
 # Get long description from individual service API and add it to object with all services
 # The API to get all services doesn't include each service's long description
 def get_services_with_long_descriptions(access_token):
     service_url = td_api_url + "/services"
     long_description_field = 'LongDescription'
+    full_category_field = 'FullCategoryText'
+
     error = False
 
     auth_header = {'Authorization': "Bearer " + access_token}
@@ -55,11 +63,16 @@ def get_services_with_long_descriptions(access_token):
        
        if single_service.status_code == 200:
            single_service_json = single_service.json()
+
            long_description = single_service_json[long_description_field]
            service[long_description_field] = long_description
            service['SpanTagsParsedFromLongDescription'] = get_parsed_html(long_description)
            all_services_with_long_descriptions[service_id] = service
            print("Added long description and parsed HTML object")
+
+           raw_categories = single_service_json[full_category_field]
+           service['CategoriesParsedFromFullCategoryText'] = get_parsed_categories(raw_categories)
+           print("Added parsed categories from FullCategoryText field")
        else:
            error = True
            print("Error: " + single_service_url) 
