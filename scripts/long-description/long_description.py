@@ -13,9 +13,8 @@ def get_access_token():
     url = td_api_url + '/auth'
     request = requests.post(url, json=post_data)
     if request.status_code != 200:
-        print("Error: Unable to get access token.")
-        print(request.text)
-        sys.exit(1)
+        sys.exit("Error - Unable to get access token. API Response: {}"
+                 .format(request.text))
 
     return request.text
 
@@ -30,12 +29,11 @@ def get_parsed_html(raw_html):
         span_id = span.get('id')
         if span_id:
             span_contents = span.contents
-            span_full_string = ""
 
             # need a better way to get the literal contents of tag.
             # span.text strips out html tags
-            for content in span_contents:
-                span_full_string += str(content)
+            span_full_string = "".join([str(content)
+                                       for content in span_contents])
 
             span_dict[span_id] = span_full_string
 
