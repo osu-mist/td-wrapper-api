@@ -4,14 +4,14 @@ import time
 import sys
 
 from bs4 import BeautifulSoup
-from configuration import td_api_url, td_api_user, td_api_pass
+from configuration import td_base_url, td_api_user, td_api_pass
 
 
 # Get an access token for authenticating API requests
-def get_access_token():
+def get_access_token(url):
     post_data = {'username': td_api_user, 'password': td_api_pass}
-    url = td_api_url + '/auth'
-    request = requests.post(url, json=post_data)
+    auth_url = url + '/auth'
+    request = requests.post(auth_url, json=post_data)
     if request.status_code != 200:
         sys.exit("Error - Unable to get access token. API Response: {}"
                  .format(request.text))
@@ -50,8 +50,8 @@ def get_parsed_categories(raw_categories):
 # Get long description from individual service API
 # and add it to object with all services. The API to
 # get all services doesn't include each service's long description
-def get_services_with_long_descriptions(access_token):
-    service_url = td_api_url + '/services'
+def get_services_with_long_descriptions(access_token, api_url):
+    service_url = api_url + '/services'
 
     # Field names used for parsing
     long_description_field = 'LongDescription'
@@ -59,6 +59,8 @@ def get_services_with_long_descriptions(access_token):
 
     parsed_long_description_field = 'SpanTagsParsedFromLongDescription'
     parsed_categoires_field = 'CategoriesParsedFromFullCategoryText'
+
+    new_ticket_url_field = 'NewTicketUrl'
 
     error = False
 
@@ -81,13 +83,16 @@ def get_services_with_long_descriptions(access_token):
             service[long_description_field] = long_description
             service[parsed_long_description_field] = get_parsed_html(
                     long_description)
-            all_services_with_long_descriptions[service_id] = service
             print("Added long description and parsed HTML object")
 
             raw_categories = single_service_json[full_category_field]
             service[parsed_categoires_field] = get_parsed_categories(
                     raw_categories)
             print("Added parsed categories from FullCategoryText field")
+
+            service[new_ticket_url_field] = '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'.format(td_base_url, service_id)
+
+            all_services_with_long_descriptions[service_id] = service
         else:
             error = True
             print("Error: " + single_service_url)
@@ -107,8 +112,11 @@ def delay(api_request_elapsed_seconds):
 
 
 if __name__ == '__main__':
-    access_token = get_access_token()
-    services, error = get_services_with_long_descriptions(access_token)
+    td_api_url = td_base_url + '/TDWebApi/api'
+    access_token = get_access_token(td_api_url)
+
+    services, error = get_services_with_long_descriptions(access_token,
+                                                          td_api_url)
 
     with open('services.json', 'w') as output_file:
         json.dump(services,
