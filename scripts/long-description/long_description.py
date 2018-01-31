@@ -90,7 +90,9 @@ def get_services_with_long_descriptions(access_token, api_url):
                     raw_categories)
             print("Added parsed categories from FullCategoryText field")
 
-            service[new_ticket_url_field] = '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'.format(td_base_url, service_id)
+            service[new_ticket_url_field] = (
+                    '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'
+                    .format(td_base_url, service_id))
 
             all_services_with_long_descriptions[service_id] = service
         else:
