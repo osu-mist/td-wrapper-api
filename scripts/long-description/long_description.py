@@ -35,7 +35,10 @@ def get_parsed_html(raw_html):
             span_full_string = "".join([str(content)
                                        for content in span_contents])
 
-            span_dict[span_id] = span_full_string
+            if span_id == "SynonymsList":
+                span_dict[span_id] = span_full_string.split(", ")
+            else:
+                span_dict[span_id] = span_full_string
 
     return span_dict
 
