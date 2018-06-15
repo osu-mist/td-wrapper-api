@@ -7,16 +7,16 @@ from bs4 import BeautifulSoup
 from configuration import td_base_url, td_api_user, td_api_pass
 
 fields_to_parse = [
-    'AccessRequirements', 'AudienceAssociated', 'AudienceDepartments',
-    'AudienceDescription', 'AudienceEmployees', 'AudienceStudents',
-    'BusinessContact', 'BusinessImpact', 'BusinessOwner', 'BusinessPriority',
-    'BusinessUnit', 'ChargesOptionsFees', 'Cost', 'EnablingServices',
-    'EnhancingServices', 'EscalationContact', 'LOSLearn', 'LOSOperate',
-    'LOSResearch', 'LOSWork', 'LongDescription', 'RelatedServices',
-    'RequestAccess', 'SLA', 'SecurityRating', 'ServiceHours', 'ServiceManager',
-    'ServiceOwner', 'ServiceType', 'ShortDescription', 'SupportAvailability',
-    'SynonymsList', 'Training', 'Value', 'additionalLinkTitle',
-    'additionalLinkURL'
+    'AccessRequirements', 'AdditionalLinkTitle', 'AdditionalLinkURL',
+    'AudienceAssociated', 'AudienceDepartments', 'AudienceDescription',
+    'AudienceEmployees', 'AudienceStudents', 'BusinessContact',
+    'BusinessImpact', 'BusinessOwner', 'BusinessPriority', 'BusinessUnit',
+    'ChargesOptionsFees', 'Cost', 'EnablingServices', 'EnhancingServices',
+    'EscalationContact', 'LOSLearn', 'LOSOperate', 'LOSResearch', 'LOSWork',
+    'LongDescription', 'RelatedServices', 'RequestAccess', 'SLA',
+    'SecurityRating', 'ServiceHours', 'ServiceManager', 'ServiceOwner',
+    'ServiceType', 'ShortDescription', 'SupportAvailability', 'SynonymsList',
+    'Training', 'Value'
 ]
 
 
