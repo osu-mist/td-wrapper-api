@@ -6,17 +6,19 @@ import sys
 from bs4 import BeautifulSoup
 from configuration import td_base_url, td_api_user, td_api_pass
 
-fields_to_parse = ['AccessRequirements', 'AudienceAssociated',
-        'AudienceDepartments', 'AudienceDescription', 'AudienceEmployees',
-        'AudienceStudents', 'BusinessContact', 'BusinessImpact',
-        'BusinessOwner', 'BusinessPriority', 'BusinessUnit',
-        'ChargesOptionsFees', 'Cost', 'EnablingServices', 'EnhancingServices',
-        'EscalationContact', 'LOSLearn', 'LOSOperate', 'LOSResearch',
-        'LOSWork', 'LongDescription', 'RelatedServices', 'RequestAccess',
-        'SLA', 'SecurityRating', 'ServiceHours', 'ServiceManager',
-        'ServiceOwner', 'ServiceType', 'ShortDescription',
-        'SupportAvailability', 'SynonymsList', 'Training', 'Value',
-        'additionalLinkTitle', 'additionalLinkURL']
+fields_to_parse = [
+    'AccessRequirements', 'AudienceAssociated', 'AudienceDepartments',
+    'AudienceDescription', 'AudienceEmployees', 'AudienceStudents',
+    'BusinessContact', 'BusinessImpact', 'BusinessOwner', 'BusinessPriority',
+    'BusinessUnit', 'ChargesOptionsFees', 'Cost', 'EnablingServices',
+    'EnhancingServices', 'EscalationContact', 'LOSLearn', 'LOSOperate',
+    'LOSResearch', 'LOSWork', 'LongDescription', 'RelatedServices',
+    'RequestAccess', 'SLA', 'SecurityRating', 'ServiceHours', 'ServiceManager',
+    'ServiceOwner', 'ServiceType', 'ShortDescription', 'SupportAvailability',
+    'SynonymsList', 'Training', 'Value', 'additionalLinkTitle',
+    'additionalLinkURL'
+]
+
 
 # Get an access token for authenticating API requests
 def get_access_token(url):
@@ -43,8 +45,8 @@ def get_parsed_html(raw_html):
 
             # need a better way to get the literal contents of tag.
             # span.text strips out html tags
-            span_full_string = "".join([str(content)
-                                       for content in span_contents])
+            span_full_string = "".join(
+                [str(content) for content in span_contents])
 
             if span_id == "SynonymsList":
                 parsed_span_dict[span_id] = span_full_string.split(", ")
@@ -101,17 +103,17 @@ def get_services_with_long_descriptions(access_token, api_url):
             long_description = single_service_json[long_description_field]
             service[long_description_field] = long_description
             service[parsed_long_description_field] = get_parsed_html(
-                    long_description)
+                long_description)
             print("Added long description and parsed HTML object")
 
             raw_categories = single_service_json[full_category_field]
             service[parsed_categoires_field] = get_parsed_categories(
-                    raw_categories)
+                raw_categories)
             print("Added parsed categories from FullCategoryText field")
 
             service[new_ticket_url_field] = (
-                    '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'
-                    .format(td_base_url, service_id))
+                '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'.format(
+                    td_base_url, service_id))
 
             all_services_with_long_descriptions[service_id] = service
         else:
@@ -136,14 +138,11 @@ if __name__ == '__main__':
     td_api_url = td_base_url + '/TDWebApi/api'
     access_token = get_access_token(td_api_url)
 
-    services, error = get_services_with_long_descriptions(access_token,
-                                                          td_api_url)
+    services, error = get_services_with_long_descriptions(
+        access_token, td_api_url)
 
     with open('services.json', 'w') as output_file:
-        json.dump(services,
-                  output_file,
-                  indent=4,
-                  sort_keys=True)
+        json.dump(services, output_file, indent=4, sort_keys=True)
 
     if error:
         sys.exit(1)
