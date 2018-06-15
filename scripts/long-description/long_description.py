@@ -6,6 +6,17 @@ import sys
 from bs4 import BeautifulSoup
 from configuration import td_base_url, td_api_user, td_api_pass
 
+fields_to_parse = ['AccessRequirements', 'AudienceAssociated',
+        'AudienceDepartments', 'AudienceDescription', 'AudienceEmployees',
+        'AudienceStudents', 'BusinessContact', 'BusinessImpact',
+        'BusinessOwner', 'BusinessPriority', 'BusinessUnit',
+        'ChargesOptionsFees', 'Cost', 'EnablingServices', 'EnhancingServices',
+        'EscalationContact', 'LOSLearn', 'LOSOperate', 'LOSResearch',
+        'LOSWork', 'LongDescription', 'RelatedServices', 'RequestAccess',
+        'SLA', 'SecurityRating', 'ServiceHours', 'ServiceManager',
+        'ServiceOwner', 'ServiceType', 'ShortDescription',
+        'SupportAvailability', 'SynonymsList', 'Training', 'Value',
+        'additionalLinkTitle', 'additionalLinkURL']
 
 # Get an access token for authenticating API requests
 def get_access_token(url):
@@ -22,7 +33,7 @@ def get_access_token(url):
 # Find span html tags and create a dict of their id and value
 def get_parsed_html(raw_html):
     parsed_html = BeautifulSoup(raw_html, 'html.parser')
-    span_dict = {}
+    parsed_span_dict = {}
     spans = parsed_html.find_all('span')
 
     for span in spans:
@@ -36,9 +47,14 @@ def get_parsed_html(raw_html):
                                        for content in span_contents])
 
             if span_id == "SynonymsList":
-                span_dict[span_id] = span_full_string.split(", ")
+                parsed_span_dict[span_id] = span_full_string.split(", ")
             else:
-                span_dict[span_id] = span_full_string
+                parsed_span_dict[span_id] = span_full_string
+
+    span_dict = {}
+
+    for field in fields_to_parse:
+        span_dict[field] = parsed_span_dict.get(field)
 
     return span_dict
 
