@@ -9,8 +9,7 @@ Copy [configuration-example.py](configuration-example.py) to configuration.py an
 ### Run with Docker
 ```
 docker build -t long_description .
-docker run -it -v "$PWD":/usr/src/long-description/configuration.py:ro  --name='long_description' long_description
+docker run --rm -it -v "$PWD"/configuration.py:/usr/src/long-description/configuration.py:ro --name='long_description' long_description
 docker cp long_description:/usr/src/long-description/services.json .
 docker rm long_description
 ```
-
