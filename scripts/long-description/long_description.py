@@ -119,6 +119,8 @@ def get_services_with_long_descriptions(access_token, api_url):
         else:
             error = True
             print("Error: " + single_service_url)
+            print("HTTP Status Code: " + str(single_service.status_code))
+            print(single_service.text)
 
         # TD's API allows 60 requests per minute,
         # so we should delay the execution of this loop
