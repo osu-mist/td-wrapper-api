@@ -6,6 +6,9 @@ import sys
 from bs4 import BeautifulSoup
 from configuration import td_base_url, td_api_user, td_api_pass
 
+# Minimum elapsed request time for a maximum of 59 requests made per minute
+request_time_min = 1.02
+
 fields_to_parse = [
     'AccessRequirements', 'AdditionalLinkTitle', 'AdditionalLinkURL',
     'AudienceAssociated', 'AudienceDepartments', 'AudienceDescription',
@@ -130,12 +133,11 @@ def get_services_with_long_descriptions(access_token, api_url):
 
 
 # Delays the script if the API response took a given amount of time
-# Request made a maximum of 59 times per minute
 def delay(api_request_elapsed_seconds):
-    if api_request_elapsed_seconds < 1.02:
-        delay_seconds = 1.02 - api_request_elapsed_seconds
+    if api_request_elapsed_seconds < request_time_min:
+        delay_seconds = request_time_min - api_request_elapsed_seconds
         time.sleep(delay_seconds)
-        
+
 
 if __name__ == '__main__':
     td_api_url = td_base_url + '/TDWebApi/api'
