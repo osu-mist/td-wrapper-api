@@ -130,11 +130,12 @@ def get_services_with_long_descriptions(access_token, api_url):
 
 
 # Delays the script if the API response took a given amount of time
+# Request made a maximum of 59 times per minute
 def delay(api_request_elapsed_seconds):
-    if api_request_elapsed_seconds < 1:
-        delay_seconds = 1 - api_request_elapsed_seconds
-        time.sleep(delay_seconds)
-
+    if api_request_elapsed_seconds < 1.02:
+        delay_seconds = 1.02 - api_request_elapsed_seconds
+        time.sleep(delay_seconds)git
+        
 
 if __name__ == '__main__':
     td_api_url = td_base_url + '/TDWebApi/api'
