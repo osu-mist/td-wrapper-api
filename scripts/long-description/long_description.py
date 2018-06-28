@@ -134,7 +134,7 @@ def get_services_with_long_descriptions(access_token, api_url):
 def delay(api_request_elapsed_seconds):
     if api_request_elapsed_seconds < 1.02:
         delay_seconds = 1.02 - api_request_elapsed_seconds
-        time.sleep(delay_seconds)git
+        time.sleep(delay_seconds)
         
 
 if __name__ == '__main__':
