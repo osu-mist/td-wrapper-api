@@ -6,8 +6,8 @@ import sys
 from bs4 import BeautifulSoup
 from configuration import td_base_url, td_api_user, td_api_pass
 
-# Minimum elapsed request time for a maximum of 59 requests made per minute
-request_time_min = 1.02
+# Minimum elapsed request time for a maximum of 50 requests made per minute
+request_time_min = 1.2
 
 fields_to_parse = [
     'AccessRequirements', 'AdditionalLinkTitle', 'AdditionalLinkURL',
