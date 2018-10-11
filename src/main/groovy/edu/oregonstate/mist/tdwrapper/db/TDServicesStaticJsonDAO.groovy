@@ -46,10 +46,7 @@ class TDServicesStaticJsonDAO {
 
         ['ID', 'Uri'].each { serviceRaw.remove(it) }
         serviceRaw?.each {
-            if (it.key.endsWith('ID')) {
-                it.value = it.value.toString()
-            }
-
+            it.value = it.key.endsWith('ID') ? it.value.toString() : it.value
             service.put(it.key.uncapitalize(), it.value)
             service.remove(it.key)
         }

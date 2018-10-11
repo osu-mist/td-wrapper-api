@@ -154,7 +154,7 @@ definitions:
         format: url
         description: new ticket URL
       order:
-        type: string
+        type: integer
         description: order of the service among its siblings.
       requestApplicationID:
         type: string
