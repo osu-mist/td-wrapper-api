@@ -24,6 +24,7 @@ paths:
       description: Get all services with their long descriptions.
       parameters:
         - $ref: '#/parameters/pretty'
+        - $ref: '#/parameters/authorization'
       responses:
         200:
           description: Object containing information
@@ -32,7 +33,7 @@ paths:
         500:
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Errors'
   /teamdynamix/services/{id}:
     get:
       summary: Get a single service by its ID
@@ -48,11 +49,11 @@ paths:
         404:
           description: Service with the specific ID not found.
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Errors'
 parameters:
   id:
     name: id
@@ -60,6 +61,12 @@ parameters:
     required: true
     description: Unique ID of TD service
     type: string
+  authorization:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: '"Bearer [token]" where [token] is your OAuth2 access token'
   pretty:
     name: pretty
     in: query
@@ -360,20 +367,26 @@ definitions:
         format: url
         description: Self link for resource object, currently null.
         example: null
+  Errors:
+    type: array
+    items:
+      $ref: "#/definitions/Error"
   Error:
     properties:
       status:
-        type: integer
+        type: string
         description: HTTP status code.
-      developerMessage:
-        type: string
-        description: An error string aimed at developers.
-      userMesage:
-        type: string
-        description: An error string aimed at end users.
+      links:
+        properties:
+          about:
+            type: string
+            description: A link to further information about the error.
       code:
-        type: integer
-        description: Error code.
-      details:
         type: string
-        description: A link to further information about the error.
+        description: Error code.
+      title:
+        type: string
+        description: A short, user readable summary of the error
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details.

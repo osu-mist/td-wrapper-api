@@ -17,7 +17,6 @@ class TDServicesStaticJsonDAO {
      */
     public List<ResourceObject> getTDServices(String baseUri) {
         def servicesRaw = getJsonRaw()
-
         servicesRaw.collect { id, service -> getResourceObject(service, baseUri) }
     }
 
@@ -42,11 +41,24 @@ class TDServicesStaticJsonDAO {
      * @return
      */
     private ResourceObject getResourceObject(def serviceRaw, String baseUri) {
+        def serviceID = serviceRaw?.ID
+        def service = [:]
+
+        ['ID', 'Uri'].each { serviceRaw.remove(it) }
+        serviceRaw?.each {
+            if (it.key.endsWith('ID')) {
+                it.value = it.value.toString()
+            }
+
+            service.put(it.key.uncapitalize(), it.value)
+            service.remove(it.key)
+        }
+
         new ResourceObject(
-                id: serviceRaw['ID'],
-                type: "service",
-                attributes: serviceRaw,
-                links: ['self': baseUri + serviceRaw['ID']]
+            id: serviceID,
+            type: "service",
+            attributes: service,
+            links: ['self': baseUri + serviceID]
         )
     }
 
