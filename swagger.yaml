@@ -28,7 +28,7 @@ paths:
         200:
           description: Object containing information
           schema:
-            $ref: '#/definitions/ServiceResourceObject'
+            $ref: '#/definitions/ServicesResultObject'
   /teamdynamix/services/{id}:
     get:
       summary: Get a single service by its ID
@@ -59,6 +59,12 @@ parameters:
     required: false
     description: If true, JSON response will be pretty-printed
 definitions:
+  ServicesResultObject:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/ServiceResourceObject"
   ServiceResultObject:
     properties:
       data:
