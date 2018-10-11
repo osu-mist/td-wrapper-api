@@ -91,7 +91,7 @@ definitions:
             type: string
             description: service
           links:
-            $ref: "#/definitions/NullSelfLink"
+            $ref: "#/definitions/SelfLink"
           attributes:
             $ref: "#/definitions/ServiceResourceObject"
   ServiceResourceObject:
@@ -360,13 +360,12 @@ definitions:
       contentUri:
         type: string
         description: URI to retrieve the attachment content.
-  NullSelfLink:
+  SelfLink:
     properties:
       self:
         type: string
         format: url
-        description: Self link for resource object, currently null.
-        example: null
+        description: Self link for resource object.
   Errors:
     type: array
     items:
