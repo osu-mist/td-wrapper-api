@@ -21,6 +21,9 @@ paths:
   /teamdynamix/services:
     get:
       summary: Get all services
+      tags:
+        - services
+      operationId: getServices
       description: Get all services with their long descriptions.
       parameters:
         - $ref: '#/parameters/pretty'
@@ -37,6 +40,9 @@ paths:
   /teamdynamix/services/{id}:
     get:
       summary: Get a single service by its ID
+      tags:
+        - services
+      operationId: getServiceById
       description: Get a single service by its ID.
       parameters:
         - $ref: '#/parameters/pretty'
