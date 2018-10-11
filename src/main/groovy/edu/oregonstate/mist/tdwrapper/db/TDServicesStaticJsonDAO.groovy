@@ -41,33 +41,11 @@ class TDServicesStaticJsonDAO {
      * @return
      */
     private ResourceObject getResourceObject(def serviceRaw, String baseUri) {
-        def service = [:]
-        def spanTags = [:]
-
-        serviceRaw?.each {
-            if (!(it.key in ['ID', 'Uri'])) {
-                it.value = it.key.endsWith('ID') ? it.value.toString() : it.value
-                service.put(it.key.uncapitalize(), it.value)
-            }
-        }
-
-        serviceRaw?.SpanTagsParsedFromLongDescription?.each {
-            if (it.key.startsWith('LOS')) {
-                spanTags.put(it.key.replace('LOS', 'los'), it.value)
-            } else if (it.key == 'SLA') {
-                spanTags.put(it.key.toLowerCase(), it.value)
-            } else {
-                spanTags.put(it.key.uncapitalize(), it.value)
-            }
-        }
-
-        service.spanTagsParsedFromLongDescription = spanTags
-
         new ResourceObject(
-            id: serviceRaw?.ID,
+            id: serviceRaw['ID'],
             type: "service",
-            attributes: service,
-            links: ['self': baseUri + serviceRaw?.ID]
+            attributes: serviceRaw,
+            links: ['self': baseUri + serviceRaw['ID']]
         )
     }
 
