@@ -65,7 +65,7 @@ definitions:
         properties:
           id:
             type: string
-            description: TD service ID
+            description: service ID.
           type:
             type: string
             description: service
@@ -76,209 +76,266 @@ definitions:
   ServiceResourceObject:
     properties:
       attachments:
-        type: string
-        description: attachment
+        type: array
+        description: service attachments.
+        items:
+          $ref: "#/definitions/Attachment"
       categoriesParsedFromFullCategoryText:
         type: string
         description: categoriesParsedFromFullCategoryText
       categoryID:
         type: string
-        description: test
+        description: ID of the containing category.
       categoryName:
         type: string
-        description: test
+        description: name of the containing category.
       compositeName:
         type: string
-        description: test
+        description: composite name of the service, which includes the name of the immediate parent category.
       configurationItemID:
         type: string
-        description: test
+        description: ID of the associated configuration item record.
       fullCategoryText:
         type: string
-        description: test
+        description: full text of the category hierarchy.
       isActive:
-        type: string
-        description: attachment
+        type: boolean
+        description: a boolean value indicating whether the service is active.
       isPublic:
-        type: string
-        description: categoriesParsedFromFullCategoryText
+        type: boolean
+        description: a boolean value indicating whether the service is public; that is, if it is visible to unauthenticated users.
       longDescription:
         type: string
-        description: test
+        description: service's long description, which is used when viewing the specific service. This can contain HTML.
       maintenanceScheduleID:
         type: string
-        description: test
+        description: ID of the associated maintenance window.
       maintenanceScheduleName:
         type: string
-        description: test
+        description: name of the associated maintenance window.
       managerFullName:
         type: string
-        description: test
+        description: full name of the managing person.
       managerUid:
         type: string
-        description: test
+        description: UID of the managing person.
       managingGroupID:
         type: string
-        description: test
+        description: ID of the managing group.
       managingGroupName:
         type: string
-        description: attachment
+        description: name of the managing group.
       name:
         type: string
-        description: TD service name
+        description: service name.
       newTicketUrl:
         type: string
-        description: test
+        description: new ticket URL
       order:
         type: string
-        description: test
+        description: order of the service among its siblings.
       requestApplicationID:
         type: string
-        description: test
+        description: ID of the destination application for any generated requests.
       requestApplicationIsActive:
-        type: string
-        description: test
+        type: boolean
+        description: active status of the destination application for any generated requests.
       requestApplicationName:
         type: string
-        description: test
+        description: name of the destination application for any generated requests.
       requestText:
         type: string
-        description: test
+        description: custom text used for the "Request This" button.
       requestTypeCategoryID:
         type: string
-        description: test
+        description: ID of the associated request type's containing category.
       requestTypeCategoryName:
         type: string
-        description: test
+        description: name of the associated request type's containing category.
       requestTypeComponent:
-        type: string
-        description: attachment
+        type: integer
+        enum: [0, 1, 4, 9]
+        description: >
+          Sort oder:
+            * 0  - [None] Indicates that a service is not tied to any particular kind of request.
+            * 1  - [Project] Indicates that a service is tied to some type of project request.
+            * 4  - [Link] Indicates that a service is tied to an external request available at a custom URL.
+            * 9  - [Ticket] Indicates that a service is tied to some sort of ticket request.
       requestTypeID:
         type: string
-        description: categoriesParsedFromFullCategoryText
+        description: ID of the associated request type.
       requestTypeIsActive:
-        type: string
-        description: test
+        type: boolean
+        description: a boolean value indicating whether the associated request type is active.
       requestTypeName:
         type: string
-        description: test
+        description: name of the associated request type.
       requestUrl:
         type: string
-        description: test
+        description: custom request URL configured for this service.
       shortDescription:
         type: string
-        description: test
+        description: service's short description, which is used when displaying the service in a list
       spanTagsParsedFromLongDescription:
         type: object
+        description: span HTML tags in the long description
         properties:
           accessRequirements:
             type: string
-            description: test
+            description: access requirements
           additionalLinkTitle:
             type: string
-            description: test
+            description: additional link title
           additionalLinkURL:
             type: string
-            description: test
+            description: additional link URL
           audienceAssociated:
             type: string
-            description: test
+            description: audience associated
           audienceDepartments:
             type: string
-            description: test
+            description: audience departments
           audienceDescription:
             type: string
-            description: test
+            description: audience description
           audienceEmployees:
             type: string
-            description: test
+            description: audience employees
           audienceStudents:
             type: string
-            description: test
+            description: audience students
           businessContact:
             type: string
-            description: test
+            description: business contact
           businessImpact:
             type: string
-            description: test
+            description: business impact
           businessOwner:
             type: string
-            description: test
+            description: business owner
           businessPriority:
             type: string
-            description: test
+            description: business priority
           businessUnit:
             type: string
-            description: test
+            description: business unit
           chargesOptionsFees:
             type: string
-            description: test
+            description: charges options fees
           cost:
             type: string
-            description: test
+            description: cost
           enablingServices:
             type: string
-            description: test
+            description: enabling services
           enhancingServices:
             type: string
-            description: test
+            description: enhancing services
           escalationContact:
             type: string
-            description: test
+            description: escalation contact
           losLearn:
             type: string
-            description: test
+            description: LOS learn
           losOperate:
             type: string
-            description: test
+            description: LOS Operate
           losResearch:
             type: string
-            description: test
+            description: LOS research
           losWork:
             type: string
-            description: test
+            description: LOS work
           longDescription:
             type: string
-            description: test
+            description: long description
           relatedServices:
             type: string
-            description: test
+            description: related services
           requestAccess:
             type: string
-            description: test
+            description: request access
           sla:
             type: string
-            description: test
+            description: SLA
           securityRating:
             type: string
-            description: test
+            description: security rating
           serviceHours:
             type: string
-            description: test
+            description: service hours
           serviceManager:
             type: string
-            description: test
+            description: service manager
           serviceOwner:
             type: string
-            description: test
+            description: service owner
           serviceType:
             type: string
-            description: test
+            description: service type
           shortDescription:
             type: string
-            description: test
+            description: short description
           supportAvailability:
             type: string
-            description: test
+            description: support availability
           synonymsList:
-            type: string
-            description: test
+            type: array
+            description: synonyms list
+            items:
+              type: string
           training:
             type: string
-            description: test
+            description: training
           value:
             type: string
-            description: test
+            description: value
+  Attachment:
+    properties:
+      id:
+        type: string
+        description: attachment ID.
+      attachmentType:
+        type: integer
+        enum: [0, 1, 3, 7, 9, 11, 13, 14, 26, 27, 29, 63]
+        description: >
+          Sort oder:
+            * 0  - [None] Indicates that the type of attachment is unknown.
+            * 1  - [Project] A project attachment.
+            * 3  - [Issue] An issue attachment.
+            * 7  - [Announcement] An announcement attachment.
+            * 9  - [Ticket] A ticket attachment.
+            * 11 - [Opportunity] An opportunity attachment.
+            * 13 - [Forums] A forum post attachment.
+            * 14 - [Account] A CRM account attachment.
+            * 26 - [KnowledgeBase] A Knowledge Base article attachment.
+            * 27 - [Asset] An asset attachment.
+            * 29 - [Contract] An asset contract attachment.
+            * 63 - [ConfigurationItem] A configuration item attachment.
+      itemID:
+        type: string
+        description: item ID.
+      createdUid:
+        type: string
+        description: UID of the creator.
+      createdFullName:
+        type: string
+        description: full name of the creator.
+      createdDate:
+        type: string
+        description: creation date.
+      name:
+        type: string
+        description: file name.
+      size:
+        type: integer
+        description: size of the attachment, in bytes.
+      uri:
+        type: string
+        description: URI for this attachment.
+      contentUri:
+        type: string
+        description: URI to retrieve the attachment content.
   NullSelfLink:
     properties:
       self:
