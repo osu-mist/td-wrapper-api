@@ -29,7 +29,7 @@ build.properties
 *.truststore
 
 # Script Related Files
-/venv
+venv/
 *.pyc
 configuration.py
 scripts/long-description/services.json
