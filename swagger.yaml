@@ -29,6 +29,10 @@ paths:
           description: Object containing information
           schema:
             $ref: '#/definitions/ServicesResultObject'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
   /teamdynamix/services/{id}:
     get:
       summary: Get a single service by its ID
@@ -44,7 +48,11 @@ paths:
         404:
           description: Service with the specific ID not found.
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
 parameters:
   id:
     name: id
@@ -136,6 +144,7 @@ definitions:
         description: service name.
       newTicketUrl:
         type: string
+        format: url
         description: new ticket URL
       order:
         type: string
@@ -178,6 +187,7 @@ definitions:
         description: name of the associated request type.
       requestUrl:
         type: string
+        format: url
         description: custom request URL configured for this service.
       shortDescription:
         type: string
@@ -194,6 +204,7 @@ definitions:
             description: additional link title
           additionalLinkURL:
             type: string
+            format: url
             description: additional link URL
           audienceAssociated:
             type: string
@@ -349,10 +360,6 @@ definitions:
         format: url
         description: Self link for resource object, currently null.
         example: null
-  Errors:
-    type: array
-    items:
-      $ref: "#/definitions/Error"
   Error:
     properties:
       status:
