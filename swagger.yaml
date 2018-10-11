@@ -1,61 +1,295 @@
 swagger: '2.0'
 info:
-  title: Web API Skeleton
-  description: Skeleton for Dropwizard Web APIs
-  version: '0.0'
+  title: TeamDynamix Wrapper API
+  description: Wrapper API for TeamDynamix to perform some data manipulation.
+  version: '1.0.0'
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
 externalDocs:
   description: GitHub Repository
-  url: https://github.com/osu-mist/web-api-skeleton
+  url: https://github.com/osu-mist/td-wrapper-api
 host: localhost
 schemes:
-  - http
-basePath: /api/v0
-consumes:
-  - text/plain
+  - https
+basePath: /v1
 produces:
-  - text/plain
+  - application/json
+consumes:
+  - application/json
 paths:
-  /:
+  /teamdynamix/services:
     get:
-      summary: Get information
-      description: Build and runtime information about the application.
+      summary: Get all services
+      description: Get all services with their long descriptions.
       parameters:
         - $ref: '#/parameters/pretty'
       responses:
         200:
           description: Object containing information
           schema:
-            $ref: '#/definitions/Info'
-
+            $ref: '#/definitions/ServiceResourceObject'
+  /teamdynamix/services/{id}:
+    get:
+      summary: Get a single service by its ID
+      description: Get a single service by its ID.
+      parameters:
+        - $ref: '#/parameters/pretty'
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: Object containing information
+          schema:
+            $ref: '#/definitions/ServiceResultObject'
+        404:
+          description: Service with the specific ID not found.
+          schema:
+            $ref: '#/definitions/Errors'
 parameters:
+  id:
+    name: id
+    in: path
+    required: true
+    description: Unique ID of TD service
+    type: string
   pretty:
     name: pretty
     in: query
     type: boolean
     required: false
     description: If true, JSON response will be pretty-printed
-
 definitions:
-  Info:
+  ServiceResultObject:
     properties:
+      data:
+        properties:
+          id:
+            type: string
+            description: TD service ID
+          type:
+            type: string
+            description: service
+          links:
+            $ref: "#/definitions/NullSelfLink"
+          attributes:
+            $ref: "#/definitions/ServiceResourceObject"
+  ServiceResourceObject:
+    properties:
+      attachments:
+        type: string
+        description: attachment
+      categoriesParsedFromFullCategoryText:
+        type: string
+        description: categoriesParsedFromFullCategoryText
+      categoryID:
+        type: string
+        description: test
+      categoryName:
+        type: string
+        description: test
+      compositeName:
+        type: string
+        description: test
+      configurationItemID:
+        type: string
+        description: test
+      fullCategoryText:
+        type: string
+        description: test
+      isActive:
+        type: string
+        description: attachment
+      isPublic:
+        type: string
+        description: categoriesParsedFromFullCategoryText
+      longDescription:
+        type: string
+        description: test
+      maintenanceScheduleID:
+        type: string
+        description: test
+      maintenanceScheduleName:
+        type: string
+        description: test
+      managerFullName:
+        type: string
+        description: test
+      managerUid:
+        type: string
+        description: test
+      managingGroupID:
+        type: string
+        description: test
+      managingGroupName:
+        type: string
+        description: attachment
       name:
         type: string
-        description: Name of the API.
-      time:
+        description: TD service name
+      newTicketUrl:
         type: string
-        description: Build time in ISO 8601 format.
-      unixTime:
-        type: integer
-        description: Build time as milliseconds since the unix epoch.
-      commit:
+        description: test
+      order:
         type: string
-        description: Git commit hash of the revision which was built.
-      documentation:
+        description: test
+      requestApplicationID:
         type: string
-        description: Filename of the swagger specification for the API.
+        description: test
+      requestApplicationIsActive:
+        type: string
+        description: test
+      requestApplicationName:
+        type: string
+        description: test
+      requestText:
+        type: string
+        description: test
+      requestTypeCategoryID:
+        type: string
+        description: test
+      requestTypeCategoryName:
+        type: string
+        description: test
+      requestTypeComponent:
+        type: string
+        description: attachment
+      requestTypeID:
+        type: string
+        description: categoriesParsedFromFullCategoryText
+      requestTypeIsActive:
+        type: string
+        description: test
+      requestTypeName:
+        type: string
+        description: test
+      requestUrl:
+        type: string
+        description: test
+      shortDescription:
+        type: string
+        description: test
+      spanTagsParsedFromLongDescription:
+        type: object
+        properties:
+          accessRequirements:
+            type: string
+            description: test
+          additionalLinkTitle:
+            type: string
+            description: test
+          additionalLinkURL:
+            type: string
+            description: test
+          audienceAssociated:
+            type: string
+            description: test
+          audienceDepartments:
+            type: string
+            description: test
+          audienceDescription:
+            type: string
+            description: test
+          audienceEmployees:
+            type: string
+            description: test
+          audienceStudents:
+            type: string
+            description: test
+          businessContact:
+            type: string
+            description: test
+          businessImpact:
+            type: string
+            description: test
+          businessOwner:
+            type: string
+            description: test
+          businessPriority:
+            type: string
+            description: test
+          businessUnit:
+            type: string
+            description: test
+          chargesOptionsFees:
+            type: string
+            description: test
+          cost:
+            type: string
+            description: test
+          enablingServices:
+            type: string
+            description: test
+          enhancingServices:
+            type: string
+            description: test
+          escalationContact:
+            type: string
+            description: test
+          losLearn:
+            type: string
+            description: test
+          losOperate:
+            type: string
+            description: test
+          losResearch:
+            type: string
+            description: test
+          losWork:
+            type: string
+            description: test
+          longDescription:
+            type: string
+            description: test
+          relatedServices:
+            type: string
+            description: test
+          requestAccess:
+            type: string
+            description: test
+          sla:
+            type: string
+            description: test
+          securityRating:
+            type: string
+            description: test
+          serviceHours:
+            type: string
+            description: test
+          serviceManager:
+            type: string
+            description: test
+          serviceOwner:
+            type: string
+            description: test
+          serviceType:
+            type: string
+            description: test
+          shortDescription:
+            type: string
+            description: test
+          supportAvailability:
+            type: string
+            description: test
+          synonymsList:
+            type: string
+            description: test
+          training:
+            type: string
+            description: test
+          value:
+            type: string
+            description: test
+  NullSelfLink:
+    properties:
+      self:
+        type: string
+        format: url
+        description: Self link for resource object, currently null.
+        example: null
+  Errors:
+    type: array
+    items:
+      $ref: "#/definitions/Error"
   Error:
     properties:
       status:
