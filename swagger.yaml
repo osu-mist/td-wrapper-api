@@ -131,7 +131,7 @@ definitions:
           isPublic:
             type: boolean
             description: a boolean value indicating whether the service is public; that is, if it is visible to unauthenticated users.
-          longDescription:
+          longHTMLDescription:
             type: string
             description: service's long description, which is used when viewing the specific service. This can contain HTML.
           maintenanceScheduleID:
@@ -205,121 +205,114 @@ definitions:
           shortDescription:
             type: string
             description: service's short description, which is used when displaying the service in a list
-          spanTagsParsedFromLongDescription:
-            type: object
-            description: span HTML tags in the long description
-            properties:
-              accessRequirements:
-                type: string
-                description: access requirements
-              additionalLinkTitle:
-                type: string
-                description: additional link title
-              additionalLinkURL:
-                type: string
-                format: url
-                description: additional link URL
-              audienceAssociated:
-                type: string
-                description: audience associated
-              audienceDepartments:
-                type: string
-                description: audience departments
-              audienceDescription:
-                type: string
-                description: audience description
-              audienceEmployees:
-                type: string
-                description: audience employees
-              audienceStudents:
-                type: string
-                description: audience students
-              businessContact:
-                type: string
-                description: business contact
-              businessImpact:
-                type: string
-                description: business impact
-              businessOwner:
-                type: string
-                description: business owner
-              businessPriority:
-                type: string
-                description: business priority
-              businessUnit:
-                type: string
-                description: business unit
-              chargesOptionsFees:
-                type: string
-                description: charges options fees
-              cost:
-                type: string
-                description: cost
-              enablingServices:
-                type: string
-                description: enabling services
-              enhancingServices:
-                type: string
-                description: enhancing services
-              escalationContact:
-                type: string
-                description: escalation contact
-              losLearn:
-                type: string
-                description: LOS learn
-              losOperate:
-                type: string
-                description: LOS Operate
-              losResearch:
-                type: string
-                description: LOS research
-              losWork:
-                type: string
-                description: LOS work
-              longDescription:
-                type: string
-                description: long description
-              relatedServices:
-                type: string
-                description: related services
-              requestAccess:
-                type: string
-                description: request access
-              sla:
-                type: string
-                description: SLA
-              securityRating:
-                type: string
-                description: security rating
-              serviceHours:
-                type: string
-                description: service hours
-              serviceManager:
-                type: string
-                description: service manager
-              serviceOwner:
-                type: string
-                description: service owner
-              serviceType:
-                type: string
-                description: service type
-              shortDescription:
-                type: string
-                description: short description
-              supportAvailability:
-                type: string
-                description: support availability
-              synonymsList:
-                type: array
-                description: synonyms list
-                items:
-                  type: string
-              training:
-                type: string
-                description: training
-              value:
-                type: string
-                description: value
+          accessRequirements:
+            type: string
+            description: access requirements
+          additionalLinkTitle:
+            type: string
+            description: additional link title
+          additionalLinkURL:
+            type: string
+            format: url
+            description: additional link URL
+          audienceAssociated:
+            type: string
+            description: audience associated
+          audienceDepartments:
+            type: string
+            description: audience departments
+          audienceDescription:
+            type: string
+            description: audience description
+          audienceEmployees:
+            type: string
+            description: audience employees
+          audienceStudents:
+            type: string
+            description: audience students
+          businessContact:
+            type: string
+            description: business contact
+          businessImpact:
+            type: string
+            description: business impact
+          businessOwner:
+            type: string
+            description: business owner
+          businessPriority:
+            type: string
+            description: business priority
+          businessUnit:
+            type: string
+            description: business unit
+          chargesOptionsFees:
+            type: string
+            description: charges options fees
+          cost:
+            type: string
+            description: cost
+          enablingServices:
+            type: string
+            description: enabling services
+          enhancingServices:
+            type: string
+            description: enhancing services
+          escalationContact:
+            type: string
+            description: escalation contact
+          losLearn:
+            type: string
+            description: LOS learn
+          losOperate:
+            type: string
+            description: LOS Operate
+          losResearch:
+            type: string
+            description: LOS research
+          losWork:
+            type: string
+            description: LOS work
+          longDescription:
+            type: string
+            description: long description
+          relatedServices:
+            type: string
+            description: related services
+          requestAccess:
+            type: string
+            description: request access
+          sla:
+            type: string
+            description: SLA
+          securityRating:
+            type: string
+            description: security rating
+          serviceHours:
+            type: string
+            description: service hours
+          serviceManager:
+            type: string
+            description: service manager
+          serviceOwner:
+            type: string
+            description: service owner
+          serviceType:
+            type: string
+            description: service type
+          supportAvailability:
+            type: string
+            description: support availability
+          synonymsList:
+            type: array
+            description: synonyms list
+            items:
+              type: string
+          training:
+            type: string
+            description: training
+          value:
+            type: string
+            description: value
   Attachment:
     properties:
       id:
