@@ -26,13 +26,12 @@ fields_to_parse = [
 # Get an access token for authenticating API requests
 def get_access_token(url):
     post_data = {'username': td_api_user, 'password': td_api_pass}
-    auth_url = url + '/auth'
-    request = requests.post(auth_url, json=post_data)
-    if request.status_code != 200:
-        sys.exit("Error - Unable to get access token. API Response: {}"
-                 .format(request.text))
+    res = requests.post(f'{url}/auth', json=post_data)
+    msg = res.text
+    if res.status_code != 200:
+        sys.exit(f'Error - Unable to get access token. API Response: {msg}')
 
-    return request.text
+    return msg
 
 
 # Find span html tags and create a dict of their id and value
@@ -44,17 +43,14 @@ def get_parsed_html(raw_html):
     for span in spans:
         span_id = span.get('id')
         if span_id:
-            span_contents = span.contents
-
             # need a better way to get the literal contents of tag.
             # span.text strips out html tags
-            span_full_string = "".join(
-                [str(content) for content in span_contents])
+            full_string = ''.join([str(content) for content in span.contents])
 
-            if span_id == "SynonymsList":
-                parsed_span_dict[span_id] = span_full_string.split(", ")
+            if span_id == 'SynonymsList':
+                parsed_span_dict[span_id] = full_string.split(', ')
             else:
-                parsed_span_dict[span_id] = span_full_string
+                parsed_span_dict[span_id] = full_string
 
     span_dict = {}
 
@@ -64,40 +60,40 @@ def get_parsed_html(raw_html):
     return span_dict
 
 
-# Split category text into list
-def get_parsed_categories(raw_categories):
-    categories = raw_categories.split(' / ')
-
-    return categories
+# Uncapitalize key or adjust key to be readable camelCase
+def uncapitalize(key):
+    if key.startswith('LOS'):
+        return key.replace('LOS', 'los')
+    elif key == 'SLA':
+        return 'sla'
+    else:
+        return key[0].lower() + key[1:]
 
 
 # Get long description from individual service API
 # and add it to object with all services. The API to
 # get all services doesn't include each service's long description
 def get_services_with_long_descriptions(access_token, api_url):
-    service_url = api_url + '/services'
+    service_url = f'{api_url}/services'
 
     # Field names used for parsing
     long_description_field = 'LongDescription'
     full_category_field = 'FullCategoryText'
-
-    parsed_long_description_field = 'SpanTagsParsedFromLongDescription'
     parsed_categoires_field = 'CategoriesParsedFromFullCategoryText'
-
     new_ticket_url_field = 'NewTicketUrl'
 
     error = False
 
-    auth_header = {'Authorization': 'Bearer ' + access_token}
+    auth_header = {'Authorization': f'Bearer {access_token}'}
     all_services = requests.get(service_url, headers=auth_header)
     all_services_with_long_descriptions = {}
 
     for service in all_services.json():
         service_id = str(service['ID'])
 
-        print("----Processing Service ID: %s----" % service_id)
+        print(f'----Processing Service ID: {service_id}----')
 
-        single_service_url = service_url + '/' + service_id
+        single_service_url = f'{service_url}/{service_id}'
         single_service = requests.get(single_service_url, headers=auth_header)
 
         if single_service.status_code == 200:
@@ -105,24 +101,33 @@ def get_services_with_long_descriptions(access_token, api_url):
 
             long_description = single_service_json[long_description_field]
             service[long_description_field] = long_description
-            service[parsed_long_description_field] = get_parsed_html(
-                long_description)
-            print("Added long description and parsed HTML object")
+            spans = get_parsed_html(long_description)
+
+            for key, value in spans.items():
+                service[key] = value
+
+            print('Added long description and parsed HTML object')
 
             raw_categories = single_service_json[full_category_field]
-            service[parsed_categoires_field] = get_parsed_categories(
-                raw_categories)
-            print("Added parsed categories from FullCategoryText field")
+            service[parsed_categoires_field] = raw_categories.split(' / ')
+            print('Added parsed categories from FullCategoryText field')
 
-            service[new_ticket_url_field] = (
-                '{}/TDClient/Requests/TicketRequests/NewForm?ID={}'.format(
-                    td_base_url, service_id))
+            ticket_endpoint = '/TDClient/Requests/TicketRequests/NewForm?ID='
+            ticket_url = f'{td_base_url}{ticket_endpoint}{service_id}'
+            service[new_ticket_url_field] = ticket_url
 
-            all_services_with_long_descriptions[service_id] = service
+            clean_service = {}
+            for key in service:
+                # Filter out duplicated data
+                if key in ['Uri', 'ID']:
+                    continue
+                clean_service[uncapitalize(key)] = service[key]
+
+            all_services_with_long_descriptions[service_id] = clean_service
         else:
             error = True
-            print("Error: " + single_service_url)
-            print("HTTP Status Code: " + str(single_service.status_code))
+            print(f'Error: {single_service_url}')
+            print(f'HTTP Status Code: {single_service}')
             print(single_service.text)
 
         # TD's API allows 60 requests per minute,
@@ -140,7 +145,7 @@ def delay(api_request_elapsed_seconds):
 
 
 if __name__ == '__main__':
-    td_api_url = td_base_url + '/TDWebApi/api'
+    td_api_url = f'{td_base_url}/TDWebApi/api'
     access_token = get_access_token(td_api_url)
 
     services, error = get_services_with_long_descriptions(
