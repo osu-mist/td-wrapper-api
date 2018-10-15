@@ -107,9 +107,11 @@ definitions:
             description: service attachments.
             items:
               $ref: "#/definitions/Attachment"
-          categoriesParsedFromFullCategoryText:
-            type: string
+          categories:
+            type: array
             description: categoriesParsedFromFullCategoryText
+            items:
+              type: string
           categoryID:
             type: string
             description: ID of the containing category.
@@ -131,7 +133,7 @@ definitions:
           isPublic:
             type: boolean
             description: a boolean value indicating whether the service is public; that is, if it is visible to unauthenticated users.
-          longHTMLDescription:
+          longDescription:
             type: string
             description: service's long description, which is used when viewing the specific service. This can contain HTML.
           maintenanceScheduleID:
@@ -272,9 +274,12 @@ definitions:
           losWork:
             type: string
             description: LOS work
-          longDescription:
+          spanLongDescription:
             type: string
-            description: long description
+            description: long description from the span tag
+          spanShortDescription:
+            type: string
+            description: short description from the span tag
           relatedServices:
             type: string
             description: related services
