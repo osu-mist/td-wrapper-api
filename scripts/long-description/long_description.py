@@ -65,7 +65,7 @@ def uncapitalize(key):
     if key.startswith('LOS'):
         return key.replace('LOS', 'los')
     elif key == 'SLA':
-        return 'sla'
+        return key.lower()
     else:
         return key[0].lower() + key[1:]
 
@@ -79,8 +79,6 @@ def get_services_with_long_descriptions(access_token, api_url):
     # Field names used for parsing
     long_description_field = 'LongDescription'
     full_category_field = 'FullCategoryText'
-    parsed_categoires_field = 'CategoriesParsedFromFullCategoryText'
-    new_ticket_url_field = 'NewTicketUrl'
 
     error = False
 
@@ -104,24 +102,31 @@ def get_services_with_long_descriptions(access_token, api_url):
             spans = get_parsed_html(long_description)
 
             for key, value in spans.items():
+                if key == 'LongDescription' or key == 'ShortDescription':
+                    key = 'span' + key
                 service[key] = value
 
             print('Added long description and parsed HTML object')
 
             raw_categories = single_service_json[full_category_field]
-            service[parsed_categoires_field] = raw_categories.split(' / ')
+            service['categoires'] = raw_categories.split(' / ')
             print('Added parsed categories from FullCategoryText field')
 
             ticket_endpoint = '/TDClient/Requests/TicketRequests/NewForm?ID='
             ticket_url = f'{td_base_url}{ticket_endpoint}{service_id}'
-            service[new_ticket_url_field] = ticket_url
+            service['newTicketUrl'] = ticket_url
 
             clean_service = {}
             for key in service:
                 # Filter out duplicated data
                 if key in ['Uri', 'ID']:
                     continue
-                clean_service[uncapitalize(key)] = service[key]
+
+                # Change value to string if field ends with 'ID'
+                value = service[key]
+                if key.endswith('ID'):
+                    value = str(value)
+                clean_service[uncapitalize(key)] = value
 
             all_services_with_long_descriptions[service_id] = clean_service
         else:
