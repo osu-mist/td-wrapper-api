@@ -276,10 +276,10 @@ definitions:
             description: LOS work
           spanLongDescription:
             type: string
-            description: long description from the span tag
+            description: long description from the span tag of the longDescription field
           spanShortDescription:
             type: string
-            description: short description from the span tag
+            description: short description from the span tag of the longDescription field
           relatedServices:
             type: string
             description: related services
