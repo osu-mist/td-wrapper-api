@@ -1,11 +1,14 @@
 import logging
 import sys
+import random
 import unittest
 
 import utils
 
 
 class IntegrationTest(unittest.TestCase):
+    valid_service_ids = []
+
     # helper funtion: test response time
     def assert_response_time(self, res, max_elapsed_seconds):
         elapsed_seconds = res.elapsed.total_seconds()
@@ -33,17 +36,21 @@ class IntegrationTest(unittest.TestCase):
         self.assert_response_time(res, 3)
         self.assertEqual(res.status_code, 200)
         for data in res.json()['data']:
+            self.__class__.valid_service_ids.append(data['id'])
             self.attributes_checker(data['attributes'])
 
-    def test_get_service_by_valid_id(self):
-        valid_id = service_id
-        res = utils.get_service_by_id(valid_id)
+    def test_get_services_by_valid_ids(self):
+        sample_nums = random.randint(1, len(self.__class__.valid_service_ids))
+        sample_nums = sample_nums if sample_nums < 5 else 5
+        samples = random.sample(self.__class__.valid_service_ids, sample_nums)
+        for valid_id in samples:
+            res = utils.get_service_by_id(valid_id)
 
-        self.assertIn('data', res.json())
-        self.assertIsInstance(res.json()['data'], dict)
-        self.assert_response_time(res, 3)
-        self.assertEqual(res.status_code, 200)
-        self.attributes_checker(res.json()['data']['attributes'])
+            self.assertIn('data', res.json())
+            self.assertIsInstance(res.json()['data'], dict)
+            self.assert_response_time(res, 3)
+            self.assertEqual(res.status_code, 200)
+            self.attributes_checker(res.json()['data']['attributes'])
 
     def test_get_service_by_invalid_id(self):
         invalid_id = 'invalid_id'
