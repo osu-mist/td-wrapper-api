@@ -1,75 +1,395 @@
 swagger: '2.0'
 info:
-  title: Web API Skeleton
-  description: Skeleton for Dropwizard Web APIs
-  version: '0.0'
+  title: TeamDynamix Wrapper API
+  description: Wrapper API for TeamDynamix to perform some data manipulation.
+  version: '1.0.0'
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
 externalDocs:
   description: GitHub Repository
-  url: https://github.com/osu-mist/web-api-skeleton
+  url: https://github.com/osu-mist/td-wrapper-api
 host: localhost
 schemes:
-  - http
-basePath: /api/v0
-consumes:
-  - text/plain
+  - https
+basePath: /v1
 produces:
-  - text/plain
+  - application/json
+consumes:
+  - application/json
 paths:
-  /:
+  /teamdynamix/services:
     get:
-      summary: Get information
-      description: Build and runtime information about the application.
+      summary: Get all services
+      tags:
+        - services
+      operationId: getServices
+      description: Get all services with their long descriptions.
       parameters:
         - $ref: '#/parameters/pretty'
+        - $ref: '#/parameters/authorization'
       responses:
         200:
           description: Object containing information
           schema:
-            $ref: '#/definitions/Info'
-
+            $ref: '#/definitions/ServicesResultObject'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Errors'
+  /teamdynamix/services/{id}:
+    get:
+      summary: Get a single service by its ID
+      tags:
+        - services
+      operationId: getServiceById
+      description: Get a single service by its ID.
+      parameters:
+        - $ref: '#/parameters/pretty'
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: Object containing information
+          schema:
+            $ref: '#/definitions/ServiceResultObject'
+        404:
+          description: Service with the specific ID not found.
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Errors'
 parameters:
+  id:
+    name: id
+    in: path
+    required: true
+    description: Unique ID of TD service
+    type: string
+  authorization:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: '"Bearer [token]" where [token] is your OAuth2 access token'
   pretty:
     name: pretty
     in: query
     type: boolean
     required: false
     description: If true, JSON response will be pretty-printed
-
 definitions:
-  Info:
+  ServicesResultObject:
     properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/ServiceResourceObject"
+  ServiceResultObject:
+    properties:
+      data:
+        $ref: "#/definitions/ServiceResourceObject"
+  ServiceResourceObject:
+    properties:
+      id:
+        type: string
+        description: service ID.
+      type:
+        type: string
+        description: service
+      links:
+        $ref: "#/definitions/SelfLink"
+      attributes:
+        properties:
+          attachments:
+            type: array
+            description: service attachments.
+            items:
+              $ref: "#/definitions/Attachment"
+          categories:
+            type: array
+            description: categoriesParsedFromFullCategoryText
+            items:
+              type: string
+          categoryID:
+            type: string
+            description: ID of the containing category.
+          categoryName:
+            type: string
+            description: name of the containing category.
+          compositeName:
+            type: string
+            description: composite name of the service, which includes the name of the immediate parent category.
+          configurationItemID:
+            type: string
+            description: ID of the associated configuration item record.
+          fullCategoryText:
+            type: string
+            description: full text of the category hierarchy.
+          isActive:
+            type: boolean
+            description: a boolean value indicating whether the service is active.
+          isPublic:
+            type: boolean
+            description: a boolean value indicating whether the service is public; that is, if it is visible to unauthenticated users.
+          longDescription:
+            type: string
+            description: service's long description, which is used when viewing the specific service. This can contain HTML.
+          maintenanceScheduleID:
+            type: string
+            description: ID of the associated maintenance window.
+          maintenanceScheduleName:
+            type: string
+            description: name of the associated maintenance window.
+          managerFullName:
+            type: string
+            description: full name of the managing person.
+          managerUid:
+            type: string
+            description: UID of the managing person.
+          managingGroupID:
+            type: string
+            description: ID of the managing group.
+          managingGroupName:
+            type: string
+            description: name of the managing group.
+          name:
+            type: string
+            description: service name.
+          newTicketUrl:
+            type: string
+            format: url
+            description: new ticket URL
+          order:
+            type: integer
+            description: order of the service among its siblings.
+          requestApplicationID:
+            type: string
+            description: ID of the destination application for any generated requests.
+          requestApplicationIsActive:
+            type: boolean
+            description: active status of the destination application for any generated requests.
+          requestApplicationName:
+            type: string
+            description: name of the destination application for any generated requests.
+          requestText:
+            type: string
+            description: custom text used for the "Request This" button.
+          requestTypeCategoryID:
+            type: string
+            description: ID of the associated request type's containing category.
+          requestTypeCategoryName:
+            type: string
+            description: name of the associated request type's containing category.
+          requestTypeComponent:
+            type: integer
+            enum: [0, 1, 4, 9]
+            description: >
+              Sort oder:
+                * 0  - [None] Indicates that a service is not tied to any particular kind of request.
+                * 1  - [Project] Indicates that a service is tied to some type of project request.
+                * 4  - [Link] Indicates that a service is tied to an external request available at a custom URL.
+                * 9  - [Ticket] Indicates that a service is tied to some sort of ticket request.
+          requestTypeID:
+            type: string
+            description: ID of the associated request type.
+          requestTypeIsActive:
+            type: boolean
+            description: a boolean value indicating whether the associated request type is active.
+          requestTypeName:
+            type: string
+            description: name of the associated request type.
+          requestUrl:
+            type: string
+            format: url
+            description: custom request URL configured for this service.
+          shortDescription:
+            type: string
+            description: service's short description, which is used when displaying the service in a list
+          accessRequirements:
+            type: string
+            description: access requirements
+          additionalLinkTitle:
+            type: string
+            description: additional link title
+          additionalLinkURL:
+            type: string
+            format: url
+            description: additional link URL
+          audienceAssociated:
+            type: string
+            description: audience associated
+          audienceDepartments:
+            type: string
+            description: audience departments
+          audienceDescription:
+            type: string
+            description: audience description
+          audienceEmployees:
+            type: string
+            description: audience employees
+          audienceStudents:
+            type: string
+            description: audience students
+          businessContact:
+            type: string
+            description: business contact
+          businessImpact:
+            type: string
+            description: business impact
+          businessOwner:
+            type: string
+            description: business owner
+          businessPriority:
+            type: string
+            description: business priority
+          businessUnit:
+            type: string
+            description: business unit
+          chargesOptionsFees:
+            type: string
+            description: charges options fees
+          cost:
+            type: string
+            description: cost
+          enablingServices:
+            type: string
+            description: enabling services
+          enhancingServices:
+            type: string
+            description: enhancing services
+          escalationContact:
+            type: string
+            description: escalation contact
+          losLearn:
+            type: string
+            description: LOS learn
+          losOperate:
+            type: string
+            description: LOS Operate
+          losResearch:
+            type: string
+            description: LOS research
+          losWork:
+            type: string
+            description: LOS work
+          spanLongDescription:
+            type: string
+            description: long description from the span tag of the longDescription field
+          spanShortDescription:
+            type: string
+            description: short description from the span tag of the longDescription field
+          relatedServices:
+            type: string
+            description: related services
+          requestAccess:
+            type: string
+            description: request access
+          sla:
+            type: string
+            description: SLA
+          securityRating:
+            type: string
+            description: security rating
+          serviceHours:
+            type: string
+            description: service hours
+          serviceManager:
+            type: string
+            description: service manager
+          serviceOwner:
+            type: string
+            description: service owner
+          serviceType:
+            type: string
+            description: service type
+          supportAvailability:
+            type: string
+            description: support availability
+          synonymsList:
+            type: array
+            description: synonyms list
+            items:
+              type: string
+          training:
+            type: string
+            description: training
+          value:
+            type: string
+            description: value
+  Attachment:
+    properties:
+      id:
+        type: string
+        description: attachment ID.
+      attachmentType:
+        type: integer
+        enum: [0, 1, 3, 7, 9, 11, 13, 14, 26, 27, 29, 63]
+        description: >
+          Sort oder:
+            * 0  - [None] Indicates that the type of attachment is unknown.
+            * 1  - [Project] A project attachment.
+            * 3  - [Issue] An issue attachment.
+            * 7  - [Announcement] An announcement attachment.
+            * 9  - [Ticket] A ticket attachment.
+            * 11 - [Opportunity] An opportunity attachment.
+            * 13 - [Forums] A forum post attachment.
+            * 14 - [Account] A CRM account attachment.
+            * 26 - [KnowledgeBase] A Knowledge Base article attachment.
+            * 27 - [Asset] An asset attachment.
+            * 29 - [Contract] An asset contract attachment.
+            * 63 - [ConfigurationItem] A configuration item attachment.
+      itemID:
+        type: string
+        description: item ID.
+      createdUid:
+        type: string
+        description: UID of the creator.
+      createdFullName:
+        type: string
+        description: full name of the creator.
+      createdDate:
+        type: string
+        description: creation date.
       name:
         type: string
-        description: Name of the API.
-      time:
-        type: string
-        description: Build time in ISO 8601 format.
-      unixTime:
+        description: file name.
+      size:
         type: integer
-        description: Build time as milliseconds since the unix epoch.
-      commit:
+        description: size of the attachment, in bytes.
+      uri:
         type: string
-        description: Git commit hash of the revision which was built.
-      documentation:
+        description: URI for this attachment.
+      contentUri:
         type: string
-        description: Filename of the swagger specification for the API.
+        description: URI to retrieve the attachment content.
+  SelfLink:
+    properties:
+      self:
+        type: string
+        format: url
+        description: Self link for resource object.
+  Errors:
+    type: array
+    items:
+      $ref: "#/definitions/Error"
   Error:
     properties:
       status:
-        type: integer
+        type: string
         description: HTTP status code.
-      developerMessage:
-        type: string
-        description: An error string aimed at developers.
-      userMesage:
-        type: string
-        description: An error string aimed at end users.
+      links:
+        properties:
+          about:
+            type: string
+            description: A link to further information about the error.
       code:
-        type: integer
-        description: Error code.
-      details:
         type: string
-        description: A link to further information about the error.
+        description: Error code.
+      title:
+        type: string
+        description: A short, user readable summary of the error
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details.

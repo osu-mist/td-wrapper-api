@@ -17,8 +17,7 @@ class TDServicesStaticJsonDAO {
      */
     public List<ResourceObject> getTDServices(String baseUri) {
         def servicesRaw = getJsonRaw()
-
-        servicesRaw.collect { id, service -> getResourceObject(service, baseUri) }
+        servicesRaw.collect { id, service -> getResourceObject(id, service, baseUri) }
     }
 
     /**
@@ -33,7 +32,7 @@ class TDServicesStaticJsonDAO {
             return null
         }
 
-        getResourceObject(servicesRaw[id], baseUri)
+        getResourceObject(id, servicesRaw[id], baseUri)
     }
 
     /**
@@ -41,12 +40,12 @@ class TDServicesStaticJsonDAO {
      * @param serviceRaw
      * @return
      */
-    private ResourceObject getResourceObject(def serviceRaw, String baseUri) {
+    private ResourceObject getResourceObject(String id, def serviceRaw, String baseUri) {
         new ResourceObject(
-                id: serviceRaw['ID'],
-                type: "service",
-                attributes: serviceRaw,
-                links: ['self': baseUri + serviceRaw['ID']]
+            id: id,
+            type: "service",
+            attributes: serviceRaw,
+            links: ['self': baseUri + id]
         )
     }
 

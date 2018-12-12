@@ -66,12 +66,31 @@ abstract class Resource {
     }
 
     /**
+     * Returns a builder for an HTTP 202 ("accepted") response with the argument entity as body.
+     * @param entity
+     * @return
+     */
+    protected static ResponseBuilder accepted(Object entity) {
+        Response.status(Response.Status.ACCEPTED)
+                .entity(entity)
+    }
+
+    /**
+     * Returns a builder for an HTTP 204 ("no content") response.
+     * @param entity
+     * @return
+     */
+    protected static ResponseBuilder noContent() {
+        Response.status(Response.Status.NO_CONTENT)
+    }
+
+    /**
      * Returns a builder for an HTTP 400 ("bad request") response with an error message as body.
      *
      * @param message
      * @return bad request response builder
      */
-    protected static ResponseBuilder badRequest(String message) {
+    protected static ResponseBuilder badRequest(String message='') {
         Response.status(Response.Status.BAD_REQUEST)
                 .entity(Error.badRequest(message))
     }
@@ -89,13 +108,23 @@ abstract class Resource {
     }
 
     /**
+     * Returns a builder for an HTTP 403 ("forbidden") response with an error message as body.
+     *
+     * @return forbidden response builder
+     */
+    protected static ResponseBuilder forbidden(String message='') {
+        Response.status(Response.Status.FORBIDDEN)
+                .entity(Error.forbidden(message))
+    }
+
+    /**
      * Returns a builder for an HTTP 404 ("not found") response with an error message as body.
      *
      * @return not found response builder
      */
-    protected static ResponseBuilder notFound() {
+    protected static ResponseBuilder notFound(String message='') {
         Response.status(Response.Status.NOT_FOUND)
-                .entity(Error.notFound())
+                .entity(Error.notFound(message))
     }
 
     /**
@@ -103,9 +132,9 @@ abstract class Resource {
      *
      * @return conflict response builder
      */
-    protected static ResponseBuilder conflict() {
+    protected static ResponseBuilder conflict(String message='') {
         Response.status(Response.Status.CONFLICT)
-                .entity(Error.conflict())
+                .entity(Error.conflict(message))
     }
 
     /**
@@ -114,7 +143,7 @@ abstract class Resource {
      *
      * @return internal server error response builder
      */
-    protected static ResponseBuilder internalServerError(String message) {
+    protected static ResponseBuilder internalServerError(String message='') {
         Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(Error.internalServerError(message))
     }
@@ -159,7 +188,7 @@ abstract class Resource {
      */
     protected Integer getPageNumber() {
         def pageNumber = uriInfo.getQueryParameters().getFirst('page[number]')
-        if (!pageNumber || !pageNumber.isInteger() || pageNumber.toInteger() < 0) {
+        if (!pageNumber || !pageNumber.isInteger() || pageNumber.toInteger() <= 0) {
             return DEFAULT_PAGE_NUMBER
         }
 
@@ -173,7 +202,7 @@ abstract class Resource {
      */
     protected Integer getPageSize() {
         def pageSize = uriInfo.getQueryParameters().getFirst('page[size]')
-        if (!pageSize || !pageSize.isInteger() || pageSize.toInteger() < 0) {
+        if (!pageSize || !pageSize.isInteger() || pageSize.toInteger() <= 0) {
             return DEFAULT_PAGE_SIZE
         }
 
