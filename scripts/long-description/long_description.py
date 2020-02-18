@@ -109,7 +109,7 @@ def get_services_with_long_descriptions(access_token, api_url):
             print('Added long description and parsed HTML object')
 
             raw_categories = single_service_json[full_category_field]
-            service['categoires'] = raw_categories.split(' / ')
+            service['categories'] = raw_categories.split(' / ')
             print('Added parsed categories from FullCategoryText field')
 
             ticket_endpoint = '/TDClient/Requests/TicketRequests/NewForm?ID='
